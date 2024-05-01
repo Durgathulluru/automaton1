@@ -1,0 +1,70 @@
+# tasks file for example
+     - name: update apt cache
+       apt: 
+         update_cache: yes
+     - name: install openJdk 17
+       apt: 
+         name: openjdk-17-jdk
+         state: present
+     - name: install dependencies
+       apt:
+        name: "{{ item }}"
+        state: present
+       with_items:
+        - openjdk-17-jdk
+        - gpung2
+
+     - name: Add Jenkins APT key
+       apt_key:
+          url: https://pkg.jenkins.io/debian/jenkins.io.key
+          state: present
+     - name: Add jenkins reposotiry
+       apt_repository:
+              repo: deb http://pkg.jenkins.io/debian-stable binary/
+              state: present
+     - name: Install Jenkins
+       apt:
+         name: jenkins
+         state: present
+
+     - name: Start Jenkins service
+       systemd:
+         name: jenkins
+         enabled: yes
+         state: started
+    
+     - name: Install dependencies
+       apt:
+          name: "{{ item }}"
+          state: present
+        
+
+       with_items:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+  
+     - name: Add Docker APT key
+       apt_key:
+          url: https://download.docker.com/linux/ubuntu/gpg
+          state: present
+
+     - name: Add Docker repository
+       apt_repository:
+          repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+          state: present
+     - name: Install Docker
+       apt:
+         name: docker-ce
+         state: present
+
+     - name: Start Docker service
+       systemd:
+         name: docker
+         enabled: yes
+         state: started
+    # - name: copy file to tomact webserser
+         #copy:
+             #src: /home/labsuser/Project1/ansible
+            # dst: /home/
